@@ -1,0 +1,22 @@
+1-Create Publick and Private Key Using  PUTTYGen App.
+2-Share your Public Key With the Company to give you access to Remote Server 
+3-Login to Putty and Create New Session with the machine IP Then Click Connection > SSH > Auth in the left navigation pane and load your SSH private key to use by clicking Browse under Private key file for authentication.
+
+-Install Ansible Latest Releases Via Apt (Debian) 
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-debian
+issue :
+ step :deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
+error:
+E: Failed to fetch http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/dists/trusty/main/binary-amd64/Packages  404  Not Found
+E: Failed to fetch http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/cosmic/main/binary-amd64/Packages  404  Not Found
+E: Some index files failed to download. They have been ignored, or old one"s used in
+
+
+-Install create ssh and install nginx
+https://linuxhint.com/ansible-tutorial-beginners/
+
+-ansible-playbook loadbalancer.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret" 
+https://stackoverflow.com/questions/21870083/specify-sudo-password-for-ansible
+
+-ansible webserver:
+ ansible-playbook webserver.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
