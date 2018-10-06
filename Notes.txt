@@ -2,6 +2,12 @@
 2-Share your Public Key With the Company to give you access to Remote Server 
 3-Login to Putty and Create New Session with the machine IP Then Click Connection > SSH > Auth in the left navigation pane and load your SSH private key to use by clicking Browse under Private key file for authentication.
 
+
+To login with no password from the control machine
+admin@Debian-95-stretch-64-minimal:~$ ssh-copy-id admin@db
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/admin/.ssh/id_rsa.pub"
+
+
 -Install Ansible Latest Releases Via Apt (Debian) 
 https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-debian
 issue :
@@ -20,3 +26,26 @@ https://stackoverflow.com/questions/21870083/specify-sudo-password-for-ansible
 
 -ansible webserver:
  ansible-playbook webserver.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+
+-ansible Mysql:
+ ansible-playbook "mysql.yml" --user=admin --extra-vars "ansible_sudo_pass=supersecret" -e "mysql_root_password=supersecret"
+
+-ansible jdk
+ansible-playbook jdk.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+
+-Manual Install git
+sudo apt update
+sudo apt install git
+
+-Install Open Jdk 
+sudo apt-get install default-jdk
+
+-Install mvn 2
+https://tecadmin.net/install-apache-maven-on-debian/
+
+-Install mvn 3
+ ansible-playbook mvn.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+
+-Install Mysql 
+https://tecadmin.net/install-mysql-server-on-debian9-stretch/
+sudo service mysql start
