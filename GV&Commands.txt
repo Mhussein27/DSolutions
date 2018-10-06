@@ -1,0 +1,32 @@
+export JAVA_HOME=/usr/lib/jvm/default-java
+export M2_HOME=/usr/local/apache-maven
+export MAVEN_HOME=/usr/local/apache-maven
+export PATH=${M2_HOME}/bin:${PATH}
+
+----
+export M3_HOME=/usr/local/apache-maven
+export MAVEN_HOME=/usr/local/apache-maven
+export PATH=${M3_HOME}/bin:${PATH}
+
+
+--
+create database testdb;
+create user 'testuser'@'localhost' identified by 'password';
+grant all on testdb.* to 'testuser' identified by 'password';
+
+
+grant all testdb.* to 'admin' identified by 'supersecret';
+grant all on testdb.* to 'admin' identified by 'supersecret';
+
+export APP_DATABASE_USER=testuser
+export APP_DATABASE_PASSWORD=password
+export APP_DATABASE_URL='jdbc:mysql://db:3306/testdb'
+mvn flyway:migrate
+
+unset
+
+  mvn flyway:migrate initOnMigrate:true
+
+mvn flyway:clean
+mvn flyway:baseline
+mvn flyway:migrate
