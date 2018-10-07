@@ -1,4 +1,7 @@
 export JAVA_HOME=/usr/lib/jvm/default-java
+
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
 export M2_HOME=/usr/local/apache-maven
 export MAVEN_HOME=/usr/local/apache-maven
 export PATH=${M2_HOME}/bin:${PATH}
@@ -21,6 +24,12 @@ grant all on testdb.* to 'admin' identified by 'supersecret';
 export APP_DATABASE_USER=testuser
 export APP_DATABASE_PASSWORD=password
 export APP_DATABASE_URL='jdbc:mysql://db:3306/testdb'
+
+export APP_DATABASE_URL='jdbc:mysql://192.168.200.99:3306/testdb'
+export APP_DATABASE_URL='jdbc:mysql://192.168.121.85:3306/testdb'
+
+
+
 mvn flyway:migrate
 
 unset
@@ -30,3 +39,22 @@ unset
 mvn flyway:clean
 mvn flyway:baseline
 mvn flyway:migrate
+
+bring machine ip
+ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p'
+
+Stop Firewall : 
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+Ubuntu rebranded iptables as ufw or Ubuntu firewall in its distrbution. So we will use ufw for different operations according to iptables in this tutorial.
+https://www.poftut.com/how-to-start-stop-and-enable-disable-iptables-or-ufw-in-ubuntu-debian-kali-mint/
+
+--------
+
+When I checked if mysql listens to remote connections I saw this:
+
+sudo netstat -ntlup | grep mysql
+As you can see it says 127.0.0.1:3306 which means "I accept only local connections
+
+/etc/mysql/mysql.conf.d/mysqld.cnf
+sudo /etc/init.d/mysql restart

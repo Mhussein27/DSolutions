@@ -21,6 +21,12 @@ E: Some index files failed to download. They have been ignored, or old one"s use
 -Install create ssh and install nginx
 https://linuxhint.com/ansible-tutorial-beginners/
 
+-nginx manual Installation :
+sudo apt install ufw
+sudo ufw enable
+https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-9
+
+
 -ansible-playbook loadbalancer.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret" 
 https://stackoverflow.com/questions/21870083/specify-sudo-password-for-ansible
 
