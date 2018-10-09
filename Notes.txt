@@ -1,16 +1,13 @@
 1-Create Publick and Private Key Using  PUTTYGen App.
-2-Share your Public Key With the Company to give you access to Remote Server 
+To login with no password from the control machine
+ssh-copy-id admin@app1
+
+2-Share your Public Key With the DS to give you access to Remote Server 
 3-Login to Putty and Create New Session with the machine IP Then Click Connection > SSH > Auth in the left navigation pane and load your SSH private key to use by clicking Browse under Private key file for authentication.
 
-
-To login with no password from the control machine
-admin@Debian-95-stretch-64-minimal:~$ ssh-copy-id admin@db
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/admin/.ssh/id_rsa.pub"
-
-
--Install Ansible Latest Releases Via Apt (Debian) 
-https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-debian
-issue :
+3-Install Ansible Latest Releases Via Apt (Debian) 
+Follow steps on : https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-debian
+--issue to be fixed later while update the repo cache :
  step :deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
 error:
 E: Failed to fetch http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/dists/trusty/main/binary-amd64/Packages  404  Not Found
@@ -18,40 +15,58 @@ E: Failed to fetch http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/cosmic/
 E: Some index files failed to download. They have been ignored, or old one"s used in
 
 
--Install create ssh and install nginx
-https://linuxhint.com/ansible-tutorial-beginners/
-
--nginx manual Installation :
+4-Create ssh and install nginx
+Follow steps on: https://linuxhint.com/ansible-tutorial-beginners/
+- for nginx manual Installation :
+Follow steps on :https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-9
+Regarding ufw :
+Ubuntu rebranded iptables as ufw or Ubuntu firewall in its distrbution. So we will use ufw for different operations according to iptables in this tutorial.
+https://www.poftut.com/how-to-start-stop-and-enable-disable-iptables-or-ufw-in-ubuntu-debian-kali-mint/
 sudo apt install ufw
 sudo ufw enable
-https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-9
 
+Stop Firewall on port 22 : 
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 
--ansible-playbook loadbalancer.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret" 
+-Ansible Script to Install nginX on LB machine
+ansible-playbook loadbalancer.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret" 
 https://stackoverflow.com/questions/21870083/specify-sudo-password-for-ansible
 
--ansible webserver:
- ansible-playbook webserver.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
-
--ansible Mysql:
- ansible-playbook "mysql.yml" --user=admin --extra-vars "ansible_sudo_pass=supersecret" -e "mysql_root_password=supersecret"
-
--ansible jdk
-ansible-playbook jdk.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+5- Ansible Script to Install Install mvn 3 , Open JDK , Git on App1 & App2 Machine 
+ ansible-playbook mvn.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
 
 -Manual Install git
 sudo apt update
 sudo apt install git
 
--Install Open Jdk 
+-Manual Install Open Jdk 
 sudo apt-get install default-jdk
 
--Install mvn 2
+-Manual Install mvn 2
 https://tecadmin.net/install-apache-maven-on-debian/
 
--Install mvn 3
- ansible-playbook mvn.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
 
--Install Mysql 
+
+6-Manual Install Mysql 
 https://tecadmin.net/install-mysql-server-on-debian9-stretch/
 sudo service mysql start
+
+Ansible Script to Install Mysql:
+ ansible-playbook "mysql.yml" --user=admin --extra-vars "ansible_sudo_pass=supersecret" -e "mysql_root_password=supersecret"
+
+Note after Installation , When I checked if mysql listens to remote connections I saw this:
+
+sudo netstat -ntlup | grep mysql
+As you can see it says 127.0.0.1:3306 which means "I accept only local connections
+
+This is the solution :update bind-address = 0.0.0.0 to my [mysqld] section of your (/etc/mysql/mysql.conf.d/mysqld.cnf) 
+Then restart mysql ( sudo /etc/init.d/mysql restart)
+
+-Ansible Script to Install  webserver: (No Need for this steps- Ignore it )
+ ansible-playbook webserver.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+
+
+-Ansible Script to Install Oracle jdk: (No Need for this steps- Ignore it )
+ansible-playbook jdk.yml --user=admin --extra-vars "ansible_sudo_pass=supersecret"
+
+

@@ -1,0 +1,14 @@
+---
+- name: install Maven
+  hosts: appserver
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: install maven (and other packages if needed)
+    become: yes
+    apt: pkg={{ item }} state=latest  
+    with_items:
+      - default-jdk
+      - maven
+      - git

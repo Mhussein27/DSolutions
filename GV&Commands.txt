@@ -1,60 +1,50 @@
+This File contains the Globale Variable need to be exported to be able to create the  Maven Package and Database script also. 
+Java Variables :
 export JAVA_HOME=/usr/lib/jvm/default-java
-
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-
-export M2_HOME=/usr/local/apache-maven
-export MAVEN_HOME=/usr/local/apache-maven
-export PATH=${M2_HOME}/bin:${PATH}
-
-----
+------
+Maven3:
 export M3_HOME=/usr/local/apache-maven
 export MAVEN_HOME=/usr/local/apache-maven
 export PATH=${M3_HOME}/bin:${PATH}
 
+Maven2:
+export M2_HOME=/usr/local/apache-maven
+export MAVEN_HOME=/usr/local/apache-maven
+export PATH=${M2_HOME}/bin:${PATH}
 
 --
-create database testdb;
-create user 'testuser'@'localhost' identified by 'password';
+Database Commands:
+-Note : % means to be accessed remotely from any IP :
+CREATE USER 'testuser'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON * . * TO 'testuser'@'%';
 grant all on testdb.* to 'testuser' identified by 'password';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'testuser'@'%';
 
-
-grant all testdb.* to 'admin' identified by 'supersecret';
-grant all on testdb.* to 'admin' identified by 'supersecret';
+----
+Database Variables:
 
 export APP_DATABASE_USER=testuser
 export APP_DATABASE_PASSWORD=password
 export APP_DATABASE_URL='jdbc:mysql://db:3306/testdb'
+# the below export should be 
+export APP_DATABASE_SCHEMA=create
 
-export APP_DATABASE_URL='jdbc:mysql://192.168.200.99:3306/testdb'
-export APP_DATABASE_URL='jdbc:mysql://192.168.121.85:3306/testdb'
+export APP_DATABASE_URL='jdbc:mysql://<Db machine Ip>:3306/testdb'
+ -Note : bring machine ip you can run the below Command
+	ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p'
+-Issue : Machine has 3 IPs , if you restart mysql , The IP will Change 
 
 
 
-mvn flyway:migrate
 
-unset
+---------
+Important note before running mvn flyway:migrate
 
-  mvn flyway:migrate initOnMigrate:true
-
+You need to run the below :
 mvn flyway:clean
 mvn flyway:baseline
-mvn flyway:migrate
-
-bring machine ip
-ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p'
-
-Stop Firewall : 
-sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-
-Ubuntu rebranded iptables as ufw or Ubuntu firewall in its distrbution. So we will use ufw for different operations according to iptables in this tutorial.
-https://www.poftut.com/how-to-start-stop-and-enable-disable-iptables-or-ufw-in-ubuntu-debian-kali-mint/
 
 --------
 
-When I checked if mysql listens to remote connections I saw this:
-
-sudo netstat -ntlup | grep mysql
-As you can see it says 127.0.0.1:3306 which means "I accept only local connections
-
-/etc/mysql/mysql.conf.d/mysqld.cnf
-sudo /etc/init.d/mysql restart
